@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+
+    <!--? link font awesome -->
+    <link rel="stylesheet" href="assets/css/all.min.css" />
+
+    <!--? link font awesome -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div
+      class="profile min-vh-100 w-100 d-flex flex-column gap-4 justify-content-center align-items-center"
+    >
+      <h2 id="wn">Welcome </h2>
+      <div class="card w-50">
+        <div class="card-header">
+          <h3 class="card-title" id="name">Your name : </h3>
+        </div>
+        <div class="card-body">
+          <p class="card-text" id="email">Your email : </p>
+          <p class="card-text" id="createdAt">CreatedAt : </p>
+        </div>
+        <div
+          class="card-footer d-flex flex-column gap-2 justify-content-center"
+        >
+          <button class="btn btn-danger w-100" id="logoutBtn">Logout</button>
+          <button
+            class="btn border-danger-subtle text-danger w-100"
+            id="deleteBtn"
+            >Delete Account</button
+          >
+        </div>
+      </div>
+    </div>
+
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>
