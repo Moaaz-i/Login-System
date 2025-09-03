@@ -9,9 +9,9 @@ const deleteBtn = document.getElementById('deleteBtn');
 let usersData = safeLocalStorage('getItem', 'users') || [];
 let currentUser = safeLocalStorage('getItem', 'currentUser') || null;
 
-if (!window.location.href.includes('dashboard.html') && currentUser) {
-  window.location.href = 'dashboard.html';
-} else if (window.location.href.includes('dashboard.html') && currentUser) {
+if (!window.location.href.includes('/dashboard.html') && currentUser) {
+  window.location.href = '../../dashboard.html/dashboard.html';
+} else if (window.location.href.includes('/dashboard.html') && currentUser) {
   document.getElementById('name').innerHTML += currentUser.name;
   document.getElementById('email').innerHTML += currentUser.email;
   document.getElementById('createdAt').innerHTML += currentUser.createdAt
@@ -136,7 +136,7 @@ function Login(email, password) {
     showNotification('Login successful! Redirecting...', 'success');
 
     setTimeout(() => {
-      window.location.href = 'dashboard.html';
+      window.location.href = '../../dashboard.html';
     }, 1500);
   } else {
     showNotification('Invalid email or password. Please try again.', 'error');
@@ -165,7 +165,7 @@ function Signup(name, email, password, additionalData = {}) {
   safeLocalStorage('setItem', 'users', usersData);
 
   setTimeout(() => {
-    window.location.href = 'index.html';
+    window.location.href = '../../index.html';
   }, 1500);
 
   showNotification(
@@ -184,7 +184,7 @@ function Logout() {
   showNotification('You are being logged out.', 'success');
   safeLocalStorage('removeItem', 'currentUser');
   setTimeout(() => {
-    window.location.href = 'index.html';
+    window.location.href = '../../index.html';
   }, 1500);
 }
 
