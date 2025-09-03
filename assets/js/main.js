@@ -9,29 +9,34 @@ const deleteBtn = document.getElementById('deleteBtn');
 let usersData = safeLocalStorage('getItem', 'users') || [];
 let currentUser = safeLocalStorage('getItem', 'currentUser') || null;
 
-// إصلاح مسارات الصفحات
-const basePath =
-  window.location.hostname === 'localhost' ||
-  window.location.hostname === '127.0.0.1'
-    ? ''
-    : `/${window.location.pathname.split('/')[1]}`;
+const repoName = 'Login-System';
+const isGitHubPages = window.location.hostname === 'moaaz-i.github.io';
+const basePath = isGitHubPages ? `/${repoName}` : '';
 
 const dashboardPath = `${basePath}/dashboard.html`;
 const indexPath = `${basePath}/index.html`;
 
-if (!window.location.pathname.includes('/dashboard.html') && currentUser) {
+if (!window.location.pathname.endsWith('/dashboard.html') && currentUser) {
   window.location.href = dashboardPath;
 } else if (
-  window.location.pathname.includes('/dashboard.html') &&
+  window.location.pathname.endsWith('/dashboard.html') &&
   currentUser
 ) {
-  document.getElementById('name').innerHTML += currentUser.name;
-  document.getElementById('email').innerHTML += currentUser.email;
-  document.getElementById('createdAt').innerHTML += currentUser.createdAt
-    .split('T')
-    .join(' ')
-    .split('.')[0];
-  document.getElementById('wn').innerHTML += currentUser.name;
+  if (document.getElementById('name')) {
+    document.getElementById('name').innerHTML += currentUser.name;
+  }
+  if (document.getElementById('email')) {
+    document.getElementById('email').innerHTML += currentUser.email;
+  }
+  if (document.getElementById('createdAt')) {
+    document.getElementById('createdAt').innerHTML += currentUser.createdAt
+      .split('T')
+      .join(' ')
+      .split('.')[0];
+  }
+  if (document.getElementById('wn')) {
+    document.getElementById('wn').innerHTML += currentUser.name;
+  }
 }
 
 injectStyles();
@@ -47,9 +52,11 @@ const inputs = [emailInput, passwordInput, nameInput].filter(
   (input) => input !== null
 );
 inputs.forEach((input) => {
-  ensureErrorEl(input);
-  input.addEventListener('input', () => validateField(input));
-  input.addEventListener('blur', () => validateField(input));
+  if (input) {
+    ensureErrorEl(input);
+    input.addEventListener('input', () => validateField(input));
+    input.addEventListener('blur', () => validateField(input));
+  }
 });
 
 if (loginBtn) {
@@ -80,11 +87,13 @@ if (signupBtn) {
   });
 }
 
-if (logoutBtn && deleteBtn) {
+if (logoutBtn) {
   logoutBtn.addEventListener('click', () => {
     Logout();
   });
+}
 
+if (deleteBtn) {
   deleteBtn.addEventListener('click', () => {
     if (confirm('Are you sure you want to delete your account forever ?')) {
       DeleteAccount();
@@ -100,6 +109,8 @@ function validateAll() {
 }
 
 function validateField(input) {
+  if (!input) return false;
+
   const value = input.value.trim();
   let valid = true,
     msg = '';
