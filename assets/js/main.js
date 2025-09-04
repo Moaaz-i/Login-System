@@ -12,15 +12,12 @@ let usersData = safeLocalStorage('getItem', 'users') || [],
 const repoName = 'Login-System/',
   isGitHubPages = window.location.hostname === 'moaaz-i.github.io',
   basePath = isGitHubPages ? `/${repoName}` : '/',
-  dashboardPath = `${basePath}dashboard.html`,
-  indexPath = `${basePath}index.html`;
+  dashboardPath = `${basePath}dashboard`,
+  indexPath = `${basePath}index`;
 
-if (!window.location.pathname.endsWith('/dashboard.html') && currentUser) {
+if (!window.location.pathname.endsWith('/dashboard') && currentUser) {
   window.location.href = dashboardPath;
-} else if (
-  window.location.pathname.endsWith('/dashboard.html') &&
-  currentUser
-) {
+} else if (window.location.pathname.endsWith('/dashboard') && currentUser) {
   if (document.getElementById('name'))
     document.getElementById('name').innerHTML += currentUser.name;
   if (document.getElementById('email'))
@@ -32,10 +29,7 @@ if (!window.location.pathname.endsWith('/dashboard.html') && currentUser) {
       .split('.')[0];
   if (document.getElementById('wn'))
     document.getElementById('wn').innerHTML += currentUser.name;
-} else if (
-  window.location.pathname.endsWith('/dashboard.html') &&
-  !currentUser
-) {
+} else if (window.location.pathname.endsWith('/dashboard') && !currentUser) {
   window.location.pathname = indexPath;
 }
 
