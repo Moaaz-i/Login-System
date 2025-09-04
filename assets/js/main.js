@@ -9,12 +9,12 @@ const deleteBtn = document.getElementById('deleteBtn');
 let usersData = safeLocalStorage('getItem', 'users') || [];
 let currentUser = safeLocalStorage('getItem', 'currentUser') || null;
 
-const repoName = 'Login-System';
+const repoName = 'Login-System/';
 const isGitHubPages = window.location.hostname === 'moaaz-i.github.io';
-const basePath = isGitHubPages ? `/${repoName}` : '';
+const basePath = isGitHubPages ? `/${repoName}` : '/';
 
-const dashboardPath = `${basePath}/dashboard.html`;
-const indexPath = `${basePath}/index.html`;
+const dashboardPath = `${basePath}dashboard.html`;
+const indexPath = `${basePath}index.html`;
 
 if (!window.location.pathname.endsWith('/dashboard.html') && currentUser) {
   window.location.href = dashboardPath;
