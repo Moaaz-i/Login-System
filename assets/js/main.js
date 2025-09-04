@@ -1,20 +1,19 @@
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const nameInput = document.getElementById('name');
-const loginBtn = document.getElementById('loginBtn');
-const signupBtn = document.getElementById('signupBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const deleteBtn = document.getElementById('deleteBtn');
+const emailInput = document.getElementById('email'),
+  passwordInput = document.getElementById('password'),
+  nameInput = document.getElementById('name'),
+  loginBtn = document.getElementById('loginBtn'),
+  signupBtn = document.getElementById('signupBtn'),
+  logoutBtn = document.getElementById('logoutBtn'),
+  deleteBtn = document.getElementById('deleteBtn');
 
-let usersData = safeLocalStorage('getItem', 'users') || [];
-let currentUser = safeLocalStorage('getItem', 'currentUser') || null;
+let usersData = safeLocalStorage('getItem', 'users') || [],
+  currentUser = safeLocalStorage('getItem', 'currentUser') || null;
 
-const repoName = 'Login-System/';
-const isGitHubPages = window.location.hostname === 'moaaz-i.github.io';
-const basePath = isGitHubPages ? `/${repoName}` : '/';
-
-const dashboardPath = `${basePath}dashboard.html`;
-const indexPath = `${basePath}index.html`;
+const repoName = 'Login-System/',
+  isGitHubPages = window.location.hostname === 'moaaz-i.github.io',
+  basePath = isGitHubPages ? `/${repoName}` : '/',
+  dashboardPath = `${basePath}dashboard.html`,
+  indexPath = `${basePath}index.html`;
 
 if (!window.location.pathname.endsWith('/dashboard.html') && currentUser) {
   window.location.href = dashboardPath;
@@ -22,21 +21,22 @@ if (!window.location.pathname.endsWith('/dashboard.html') && currentUser) {
   window.location.pathname.endsWith('/dashboard.html') &&
   currentUser
 ) {
-  if (document.getElementById('name')) {
+  if (document.getElementById('name'))
     document.getElementById('name').innerHTML += currentUser.name;
-  }
-  if (document.getElementById('email')) {
+  if (document.getElementById('email'))
     document.getElementById('email').innerHTML += currentUser.email;
-  }
-  if (document.getElementById('createdAt')) {
+  if (document.getElementById('createdAt'))
     document.getElementById('createdAt').innerHTML += currentUser.createdAt
       .split('T')
       .join(' ')
       .split('.')[0];
-  }
-  if (document.getElementById('wn')) {
+  if (document.getElementById('wn'))
     document.getElementById('wn').innerHTML += currentUser.name;
-  }
+} else if (
+  window.location.pathname.endsWith('/dashboard.html') &&
+  !currentUser
+) {
+  window.location.pathname = indexPath;
 }
 
 injectStyles();
@@ -59,52 +59,39 @@ inputs.forEach((input) => {
   }
 });
 
-if (loginBtn) {
+if (loginBtn)
   loginBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (!validateAll()) {
+    if (!validateAll())
       showNotification('Please fix the errors before submitting.', 'error');
-    } else {
-      const data = [emailInput.value.trim(), passwordInput.value];
-      Login(data[0], data[1]);
-    }
+    else Login(emailInput.value.trim(), passwordInput.value);
   });
-}
 
-if (signupBtn) {
+if (signupBtn)
   signupBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (!validateAll()) {
+    if (!validateAll())
       showNotification('Please fix the errors before submitting.', 'error');
-    } else {
-      const data = [
+    else
+      Signup(
         nameInput.value.trim(),
         emailInput.value.trim(),
-        passwordInput.value,
-      ];
-      Signup(data[0], data[1], data[2]);
-    }
+        passwordInput.value
+      );
   });
-}
 
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', () => {
-    Logout();
-  });
-}
+if (logoutBtn) logoutBtn.addEventListener('click', () => Logout());
 
-if (deleteBtn) {
+if (deleteBtn)
   deleteBtn.addEventListener('click', () => {
-    if (confirm('Are you sure you want to delete your account forever ?')) {
+    if (confirm('Are you sure you want to delete your account forever ?'))
       DeleteAccount();
-    }
   });
-}
 
 function validateAll() {
-  const emailOk = emailInput ? validateField(emailInput) : true;
-  const passOk = passwordInput ? validateField(passwordInput) : true;
-  const nameOk = nameInput ? validateField(nameInput) : true;
+  const emailOk = emailInput ? validateField(emailInput) : true,
+    passOk = passwordInput ? validateField(passwordInput) : true,
+    nameOk = nameInput ? validateField(nameInput) : true;
   return emailOk && passOk && (nameInput ? nameOk : true);
 }
 
@@ -158,13 +145,9 @@ function Login(email, password) {
   if (user) {
     safeLocalStorage('setItem', 'currentUser', user);
     showNotification('Login successful! Redirecting...', 'success');
-
-    setTimeout(() => {
-      window.location.href = dashboardPath;
-    }, 1500);
-  } else {
+    setTimeout(() => (window.location.href = dashboardPath), 1500);
+  } else
     showNotification('Invalid email or password. Please try again.', 'error');
-  }
 }
 
 function Signup(name, email, password, additionalData = {}) {
@@ -187,11 +170,7 @@ function Signup(name, email, password, additionalData = {}) {
 
   usersData.push(newUser);
   safeLocalStorage('setItem', 'users', usersData);
-
-  setTimeout(() => {
-    window.location.href = indexPath;
-  }, 1500);
-
+  setTimeout(() => (window.location.href = indexPath), 1500);
   showNotification(
     'Account created successfully! You can now login.',
     'success'
@@ -207,32 +186,22 @@ function Signup(name, email, password, additionalData = {}) {
 function Logout() {
   showNotification('You are being logged out.', 'success');
   safeLocalStorage('removeItem', 'currentUser');
-  setTimeout(() => {
-    window.location.href = indexPath;
-  }, 1500);
+  setTimeout(() => (window.location.href = indexPath), 1500);
 }
 
 function DeleteAccount() {
   if (currentUser) {
     const userIndex = usersData.findIndex((user) => user.id === currentUser.id);
-
     if (userIndex !== -1) {
       usersData.splice(userIndex, 1);
-
       safeLocalStorage('setItem', 'users', usersData);
-
       Logout();
-
       showNotification(
         'Your account has been deleted successfully.',
         'success'
       );
-    } else {
-      showNotification('User not found in database.', 'error');
-    }
-  } else {
-    showNotification('No user is currently logged in.', 'error');
-  }
+    } else showNotification('User not found in database.', 'error');
+  } else showNotification('No user is currently logged in.', 'error');
 }
 
 function ensureErrorEl(input) {
@@ -275,39 +244,7 @@ function clearSuccess(input) {
 }
 
 function injectStyles() {
-  const css = `
-    .error-text { 
-      color: #dc3545; 
-      font-size: 0.85rem; 
-      margin-top: 4px; 
-      display: none; 
-    }
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 15px 20px;
-      border-radius: 5px;
-      color: white;
-      z-index: 10000;
-      max-width: 350px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      opacity: 0;
-      transform: translateY(-20px);
-      transition: opacity 0.3s, transform 0.3s;
-    }
-    .notification.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .notification.success {
-      background-color: #28a745;
-    }
-    .notification.error {
-      background-color: #dc3545;
-    }
-  `;
-
+  const css = `.error-text{color:#dc3545;font-size:0.85rem;margin-top:4px;display:none}.notification{position:fixed;top:20px;right:20px;padding:15px 20px;border-radius:5px;color:#fff;z-index:10000;max-width:350px;box-shadow:0 4px 12px rgba(0,0,0,.15);opacity:0;transform:translateY(-20px);transition:opacity .3s,transform .3s}.notification.show{opacity:1;transform:translateY(0)}.notification.success{background-color:#28a745}.notification.error{background-color:#dc3545}`;
   const style = document.createElement('style');
   style.textContent = css;
   document.head.appendChild(style);
@@ -315,69 +252,52 @@ function injectStyles() {
 
 function showNotification(message, type = 'info') {
   const existingNotification = document.querySelector('.notification');
-  if (existingNotification) {
-    existingNotification.remove();
-  }
+  if (existingNotification) existingNotification.remove();
 
   const notification = document.createElement('div');
   notification.className = `notification ${type}`;
   notification.textContent = message;
   document.body.appendChild(notification);
 
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 10);
-
+  setTimeout(() => notification.classList.add('show'), 10);
   setTimeout(() => {
     notification.classList.remove('show');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
+    setTimeout(
+      () =>
+        notification.parentNode &&
+        notification.parentNode.removeChild(notification),
+      300
+    );
   }, 5000);
 }
 
 function safeLocalStorage(action = 'getItem', key = '', value = null) {
   try {
-    if (!['getItem', 'setItem', 'removeItem', 'clear'].includes(action)) {
+    if (!['getItem', 'setItem', 'removeItem', 'clear'].includes(action))
       throw new Error(`Unsupported operation: ${action}`);
-    }
-
-    if (action !== 'clear' && typeof key !== 'string') {
+    if (action !== 'clear' && typeof key !== 'string')
       throw new Error('The key must be a valid string');
-    }
 
     switch (action) {
       case 'setItem':
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined)
           throw new Error('Cannot store an empty value');
-        }
         const safeValue =
           typeof value === 'object' ? JSON.stringify(value) : String(value);
         localStorage.setItem(key, safeValue);
         return true;
-
       case 'getItem':
         const raw = localStorage.getItem(key);
-        if (
-          raw === null ||
-          raw === 'null' ||
-          raw === 'undefined' ||
-          raw === ''
-        ) {
+        if (raw === null || raw === 'null' || raw === 'undefined' || raw === '')
           return null;
-        }
         try {
           return JSON.parse(raw);
         } catch {
           return raw;
         }
-
       case 'removeItem':
         localStorage.removeItem(key);
         return true;
-
       case 'clear':
         localStorage.clear();
         return true;
